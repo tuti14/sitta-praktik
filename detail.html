@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard SITTA - Universitas Terbuka</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Niramit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    
+    <style>
+        /* Top Navigation */
+        .breadcrumb-nav { 
+            height: 70px; 
+            background-color: var(--bg-white); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 30px; 
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .breadcrumb { 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+        }
+
+        .breadcrumb span { 
+            color: var(--primary-blue); 
+            font-weight: 600; 
+        }
+
+        /* Content Layout */
+        .container { 
+            flex: 1; 
+        }
+
+        .btn-back { 
+            background-color: var(--bg-white); 
+            border: 1px solid var(--primary-blue); 
+            color: var(--primary-blue); 
+            padding: 8px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-weight: 600; 
+            margin-bottom: 20px; 
+            text-decoration: none; 
+            width: fit-content; 
+            transition: var(--transition);
+        }
+
+        .detail-card { 
+            background-color: var(--bg-white);
+            border-radius: 15px; 
+            padding: 35px; 
+            border: 1px solid var(--border); 
+        }
+
+        /* Section Atas: Gambar & Info Utama */
+        .main-info { 
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            gap: 40px; 
+            margin-bottom: 40px; 
+        }
+
+        .book-cover-wrapper { 
+            text-align: center; 
+        }
+
+        .book-cover { 
+            width: 100%; 
+            border-radius: 10px; 
+            box-shadow: var(--shadow-sm); 
+        }
+
+        .badge-cat {
+            background-color: var(--info-subtle);
+            color: var(--text-info);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .book-title {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .book-edition {
+            color: var(--secondary-blue);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+        }
+
+        .info-list li {
+            padding: 10px 0;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-light-subtle);
+        }
+
+        .info-list strong {
+            color: var(--text-dark);
+            width: 130px;
+            display: inline-block;
+        }
+
+        /* Stok Panel */
+        .stock-panel {
+            background-color: var(--light);
+            border: 1px solid var(--border-light-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stock-panel h4 {
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--border-light-subtle);
+            padding-bottom: 8px;
+        }
+
+        .stock-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .stock-row span:last-child {
+            text-align: right;
+        }
+
+        .badge-num {
+            background: var(--primary-blue);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Deskripsi & Detail Bawah */
+        .description-sec {
+            border-top: 1px solid var(--border-light-subtle);
+            padding-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .description-sec h4 {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        .description-sec p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .grid-detail {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+        }
+
+        .sub-info-card {
+            border: 1px solid var(--border-light-subtle);
+            border-radius: 10px;
+            padding: 20px;
+            background-color: var(--bg-white);
+        }
+
+        .topic-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .topic-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .topic-list i {
+            color: var(--secondary-blue);
+            font-size: 0.8rem;
+        }
+
+        /* Footer Actions */
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-light-subtle);
+            padding-top: 25px;
+            margin-top: 20px;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 480px) {
+            .detail-card {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-info {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-detail {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-actions {
+                display: block;
+            }
+
+            .footer-actions button {
+                margin-bottom: 0.5rem;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/components.js"></script>
+</head>
+
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-wrapper">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="mainContent">
+            <!-- TOPBAR -->
+            <div id="topbar-container"></div>
+
+            <section class="content-body">
+                <a href="stok.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+
+
+                <header class="breadcrumb-nav">
+                    <div class="breadcrumb">
+                        Informasi Bahan Ajar / <span>Detail Bahan Ajar</span>
+                    </div>
+                </header>
+
+                <section class="container">
+                    <div class="detail-card" id="detailContainer">
+                        <!-- Data akan dimuat oleh JavaScript -->
+                        <p>Memuat data bahan ajar...</p>
+                    </div>
+                </section>
+
+            </section>
+
+            <div id="footer-container"></div>
+        </main>
+    </div>
+
+    <!-- Script -->
+    <script src="js/script.js"></script>
+</body>
+</html>

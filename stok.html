@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stok Bahan Ajar - Universitas Terbuka</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Niramit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    
+    <style>
+        .header-section { 
+            margin-bottom: 25px; 
+        }
+        
+        .header-section h2 { 
+            color: var(--primary-blue); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-bottom: 5px;
+        }
+
+        .header-section p { 
+            font-size: 0.9rem; 
+            color: var(--text-body); 
+            margin-left: 36px; 
+        }
+
+        /* Stats Cards Layout */
+        .stats-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; 
+            margin-bottom: 30px;
+        }
+
+        .stat-card { 
+            background: var(--bg-white); 
+            padding: 20px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            box-shadow: var(--shadow-sm); 
+            border: 1px solid var(--border-color); 
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 10px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.4rem; 
+        }
+
+        .stat-info span { 
+            display: block; 
+            font-size: 0.75rem; 
+            color: var(--text-body); 
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-info h3 { 
+            font-size: 1.4rem; 
+            color: var(--primary-blue); 
+            margin-top: 2px;
+        }
+
+        /* Filter & Action Bar */
+        .filter-section { 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; 
+            margin-bottom: 25px;
+            align-items: center;
+        }
+
+        .search-wrapper { 
+            flex: 2; 
+            min-width: 280px;
+            position: relative; 
+        }
+
+        .search-wrapper i { 
+            position: absolute; 
+            left: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: var(--text-body-secondary); 
+        }
+
+        .search-wrapper input { 
+            width: 100%; 
+            padding: 12px 15px 12px 45px; 
+            border-radius: 10px; 
+            border: 1px solid var(--border-color); 
+            outline: none; 
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px var(--primary-subtle);
+        }
+
+        .filter-select { 
+            flex: 1;
+            min-width: 180px;
+            padding: 12px; 
+            border-radius: 10px; 
+            border: 1px solid var(--border-color); 
+            background-color: var(--bg-white);
+            font-size: 0.9rem;
+            color: var(--text-body-secondary);
+            cursor: pointer;
+        }
+
+        .btn-add { 
+            background: var(--primary-blue); 
+            color: var(--text-white); 
+            padding: 12px 20px; 
+            border-radius: 10px; 
+            border: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn-add:hover,
+        .btn-addStok:hover { 
+            background: var(--secondary-blue); 
+            transform: translateY(-2px);
+        }
+
+        .btn-addStok {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-blue);
+            color: var(--text-white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+
+        /* --- MODAL STYLING --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 45, 98, 0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 24px;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            animation: modalIn 0.3s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: none; border: none;
+            font-size: 1.5rem; color: var(--secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover { color: var(--primary-blue); }
+
+        #AddStokContent .title-form h2 {
+            font-size: 1.5rem;
+            color: var(--primary-blue); 
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #AddStokContent .title-form p {
+            font-size: 0.8rem;
+            color: var(--secondary); 
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        #addStokForm .overflow-form {
+            max-height: 150px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Custom Scrollbar for Modal Form */
+        #addStokForm .overflow-form::-webkit-scrollbar { width: 5px; }
+        #addStokForm .overflow-form::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+        /* FORM STYLING */
+        .form-group { margin-bottom: 24px; }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container input,
+        .input-select {
+            width: 100%;
+            padding: 14px 16px 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            font-size: 0.95rem;
+            color: var(--text-body);
+            transition: var(--transition);
+        }
+
+        .input-container input:focus {
+            border-color: var(--primary-blue);
+            background: var(--light-subtle);
+        }
+
+        /* Responsive Table */
+        .table-container { 
+            background: var(--bg-white); 
+            border-radius: 15px; 
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            white-space: nowrap;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: left; 
+            min-width: 900px; /* Force scroll on small screens */
+        }
+
+        thead { 
+            background: var(--light-subtle); 
+            border-bottom: 2px solid var(--border-color); 
+        }
+
+        th {
+            padding: 18px 20px; 
+            font-size: 0.8rem; 
+            color: var(--primary-blue);
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+
+        td { 
+            padding: 15px 20px; 
+            border-bottom: 1px solid var(--border-color); 
+            font-size: 0.9rem; 
+            vertical-align: middle; 
+            color: var(--text-body);
+        }
+
+        td:last-child {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: var(--light-subtle); }
+
+        /* Badge Logic */
+        .stok-badge { 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-weight: 700; 
+            font-size: 0.75rem; 
+            display: inline-block;
+        }
+
+        .stok-high { background: var(--bg-success-subtle); color: var(--text-success); }
+        .stok-medium { background: var(--bg-warning-subtle); color: var(--text-warning); }
+        .stok-low { background: var(--bg-danger-subtle); color: var(--text-danger); }
+
+        /* Action Buttons */
+        .action-group { 
+            display: flex; 
+            gap: 8px; 
+        }
+
+        .btn-action { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border-color); 
+            background: var(--bg-white); 
+            cursor: pointer; 
+            transition: var(--transition); 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .btn-action:hover { background: var(--light); transform: scale(1.1); }
+        .btn-detail { color: var(--text-info); }
+        .btn-edit { color: var(--text-warning); }
+        .btn-delete { color: var(--text-danger); }
+
+        .pagination { 
+            padding: 20px 30px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--bg-white);
+            color: var(--text-body-secondary);
+            font-size: 0.85rem; 
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 768px) {
+            .filter-section { 
+                flex-direction: column; 
+                align-items: stretch; 
+            }
+
+            .search-wrapper, 
+            .filter-select, 
+            .btn-add { 
+                width: 100%; 
+                flex: none; 
+            }
+
+            .stat-info h3 { 
+                font-size: 1.2rem; 
+            }
+        }
+    </style>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/components.js"></script>
+</head>
+
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-wrapper">
+        <!-- SIDEBAR CONTAINER -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="mainContent">
+            
+            <!-- TOPBAR CONTAINER -->
+            <div id="topbar-container"></div>
+
+            <section class="content-body">
+                <header class="header-section">
+                    <h2><i class="fa-solid fa-book-open"></i> Informasi Bahan Ajar</h2>
+                    <p>Manajemen data dan ketersediaan stok buku Universitas Terbuka</p>
+                </header>
+
+                <!-- Stats Overview -->
+                <section class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--primary-subtle); color: var(--primary-blue);"><i class="fa-solid fa-book"></i></div>
+                        <div class="stat-info"><span>Total Judul</span><h3 id="totalJudul">0</h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--info-subtle); color: var(--text-info);"><i class="fa-solid fa-layer-group"></i></div>
+                        <div class="stat-info"><span>Total Stok</span><h3 id="totalStok">0</h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--success-subtle); color: var(--text-success);"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="stat-info"><span>Stok Tersedia</span><h3 id="stokTersedia">0</h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--danger-subtle); color: var(--text-danger);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="stat-info"><span>Stok Menipis</span><h3 id="stokMenipis">0</h3></div>
+                    </div>
+                </section>
+
+                <!-- Filter & Search Bar -->
+                <section class="filter-section">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInp" placeholder="Cari berdasarkan kode, judul, atau penerbit...">
+                    </div>
+                    
+                    <select class="filter-select" id="catFilter">
+                        <option value="all">Semua Kategori</option>
+                        <option value="umum">MK Umum</option>
+                        <option value="inti">MK Inti</option>
+                        <option value="pilihan">MK Pilihan</option>
+                    </select>
+
+                    <button class="btn-add" onclick="modalAddStok()"> <i class="fa-solid fa-plus"></i> Tambah Data</a></button>
+                </section>
+
+                <!-- Data Table -->
+                <div class="table-container">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">No</th>
+                                    <th style="width: 100px;">Kode</th>
+                                    <th>Judul Bahan Ajar</th>
+                                    <th>Penerbit</th>
+                                    <th>Kategori</th>
+                                    <th>Harga</th>
+                                    <th>Status Stok</th>
+                                    <th style="text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stokTableBody">
+                                <!-- Data will be injected here by script.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Table Footer / Pagination -->
+                    <footer class="pagination">
+                        <div id="dataInfo">Menampilkan 0 dari 0 data bahan ajar</div>
+                        <div class="page-btns">
+                            <!-- Optional pagination controls -->
+                        </div>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- FOOTER CONTAINER -->
+            <div id="footer-container"></div>
+        </main>
+    </div>
+
+    <div id="addModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+
+            <!-- Konten Tambah Data Stok -->
+            <div id="AddStokContent" class="modal-body" style="display: none;">
+                <div class="title-form">
+                    <h2>Tambah Data Stok Bahan Ajar</h2>
+                </div>
+                <form id="addStokForm">
+                    <div class="overflow-form">
+                        <div class="form-group">
+                            <label>Kode MK</label>
+                            <div class="input-container">
+                                <input type="text" id="newKode" placeholder="Contoh: MSIM4310" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Judul Bahan Ajar</label>
+                            <div class="input-container">
+                                <input type="text" id="newJudul" placeholder="Judul Bahan Ajar" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Penerbit</label>
+                            <div class="input-container">
+                                <input type="text" id="newPenerbit" placeholder="Penerbit" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Kategori</label>
+                            <select class="input-select" id="newKategori" required>
+                                <option value="MK Umum">MK Umum</option>
+                                <option value="MK Inti">MK Inti</option>
+                                <option value="MK Pilihan">MK Pilihan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Harga (Rp)</label>
+                            <div class="input-container">
+                                <input type="number" id="newHarga" placeholder="0" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Stok</label>
+                            <div class="input-container">
+                                <input type="number" id="newStok" placeholder="0" required>
+                            </div>
+                        </div>
+                    </div>                  
+                    <button type="submit" class="btn-addStok"><i class="fa-solid fa-plus"></i> Tambah Data</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="js/script.js"></script>
+</body>
+</html>
